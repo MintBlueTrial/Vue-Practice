@@ -47,21 +47,20 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
 
 export default {
     name: 'Login',
     data() {
         const validateUsername = (rule, value, callback) => {
-            if (!validUsername(value)) {
+            if (!value || value.length === 0) {
                 callback(new Error('Please enter the correct user name'))
             } else {
                 callback()
             }
         }
         const validatePassword = (rule, value, callback) => {
-            if (value.length < 6) {
-                callback(new Error('The password can not be less than 6 digits'))
+            if (value.length < 4) {
+                callback(new Error('The password can not be less than 4 digits'))
             } else {
                 callback()
             }
@@ -170,16 +169,16 @@ $cursor: #fff;
 
         input {
             background: transparent;
-            border: 0px;
+            border: 0;
             -webkit-appearance: none;
-            border-radius: 0px;
+            border-radius: 0;
             padding: 12px 5px 12px 15px;
             color: $light_gray;
             height: 47px;
             caret-color: $cursor;
 
             &:-webkit-autofill {
-                box-shadow: 0 0 0px 1000px $bg inset !important;
+                box-shadow: 0 0 0 1000px $bg inset !important;
                 -webkit-text-fill-color: $cursor !important;
             }
         }
@@ -240,7 +239,7 @@ $light_gray: #eee;
         .title {
             font-size: 26px;
             color: $light_gray;
-            margin: 0px auto 40px auto;
+            margin: 0 auto 40px auto;
             text-align: center;
             font-weight: bold;
         }
