@@ -17,11 +17,11 @@
             accept="application/epub+zip"
             class="image-upload"
         >
-            <i class="el-icon-upload" />
-            <div class="el-upload__text" v-if="fileList.length === 0">
+            <i class="el-icon-upload"/>
+            <div v-if="fileList.length === 0" class="el-upload__text">
                 请将电子书拖入或 <em>点击上传</em>
             </div>
-            <div class="el-upload__text" v-else>图书已上传</div>
+            <div v-else class="el-upload__text">图书已上传</div>
         </el-upload>
     </div>
 </template>
@@ -58,7 +58,23 @@ export default {
         beforeUpload(file) {
             this.$emit('beforeUpload', file)
         },
-        onSuccess() {},
+        onSuccess(response, file) {
+            console.log(response, file)
+            const { code, msg } = response
+            if (code === 0) {
+                this.$message({
+                    message: msg,
+                    type: 'success'
+                })
+                this.$emit('onSuccess', file)
+            } else {
+                this.$message({
+                    message: (msg && `上传失败：${msg}`) || '上传失败',
+                    type: 'error'
+                })
+                this.$emit('onError', file)
+            }
+        },
         onError(err) {
             const errInfo = err.message && JSON.parse(err.message)
             this.$message({
@@ -67,7 +83,13 @@ export default {
             })
             this.$emit('onError', err)
         },
-        onRemove() {},
+        onRemove() {
+            this.$message({
+                message: '删除成功',
+                type: 'success'
+            })
+            this.$emit('onRemove')
+        },
         onExceed() {
             this.$message({
                 message: '每次只能上传一个文件',
