@@ -1,11 +1,10 @@
 <template>
-    <detail :is-edit="false"></detail>
+    <detail :is-edit="false" />
 </template>
 
 <script>
 import Detail from '@/views/book/components/Detail'
 export default {
-    name: 'create',
     components: { Detail },
     data() {
         return {
