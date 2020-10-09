@@ -137,18 +137,22 @@ export default {
         }
     },
     methods: {
+        // 展示说明
         showGuide() {
             console.log('Guide')
         },
+        // 提交表单信息
         submitForm() {
             this.loading = true
             setTimeout(() => {
                 this.loading = false
             }, 1000)
         },
+        // 上传成功事件
         onUploadSuccess() {
             console.log(123)
         },
+        // 上传移除事件
         onUploadRemove() {
             console.log(456)
         }
