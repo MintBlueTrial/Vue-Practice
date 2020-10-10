@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="postForm" :model="postForm">
+    <el-form ref="postForm" :model="postForm" :rules="postFormRules">
         <sticky :class-name="'sub-navbar ' + postForm.status">
             <el-button v-if="!isEdit" @click="showGuide">显示帮助</el-button>
             <el-button
@@ -13,7 +13,7 @@
         </sticky>
         <div class="detail-container">
             <el-row>
-                <warning />
+                <warning/>
                 <el-col :span="24">
                     <EBookUpload
                         :file-list="fileList"
@@ -30,49 +30,49 @@
                     </el-form-item>
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="作者：" :label-width="labelWidth">
-                                <el-input v-model="postForm.author" placeholder="作者" />
+                            <el-form-item prop="author" label="作者：" :label-width="labelWidth">
+                                <el-input v-model="postForm.author" placeholder="作者"/>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="出版社：" :label-width="labelWidth">
-                                <el-input v-model="postForm.publisher" placeholder="出版社" />
+                            <el-form-item prop="publisher" label="出版社：" :label-width="labelWidth">
+                                <el-input v-model="postForm.publisher" placeholder="出版社"/>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="语言：" :label-width="labelWidth">
-                                <el-input v-model="postForm.language" placeholder="语言" />
+                            <el-form-item prop="language" label="语言：" :label-width="labelWidth">
+                                <el-input v-model="postForm.language" placeholder="语言"/>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="根文件：" :label-width="labelWidth">
-                                <el-input v-model="postForm.rootFile" placeholder="根文件" disabled />
+                                <el-input v-model="postForm.rootFile" placeholder="根文件" disabled/>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="文件路径：" :label-width="labelWidth">
-                                <el-input v-model="postForm.filePath" placeholder="文件路径" disabled />
+                                <el-input v-model="postForm.filePath" placeholder="文件路径" disabled/>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="解压路径：" :label-width="labelWidth">
-                                <el-input v-model="postForm.unzipPath" placeholder="解压路径" disabled />
+                                <el-input v-model="postForm.unzipPath" placeholder="解压路径" disabled/>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="封面路径：" :label-width="labelWidth">
-                                <el-input v-model="postForm.coverPath" placeholder="封面路径" disabled />
+                                <el-input v-model="postForm.coverPath" placeholder="封面路径" disabled/>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="文件名称：" :label-width="labelWidth">
-                                <el-input v-model="postForm.originalName" placeholder="文件名称" disabled />
+                                <el-input v-model="postForm.originalName" placeholder="文件名称" disabled/>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -90,7 +90,7 @@
                         <el-col :span="24">
                             <el-form-item label="目录：" :label-width="labelWidth">
                                 <div v-if="postForm.contents && postForm.contents.length > 0" class="contents-wrapper">
-                                    <el-tree :data="contentsTree" @node-click="onContentClick" />
+                                    <el-tree :data="contentsTree" @node-click="onContentClick"/>
                                 </div>
                                 <span v-else>无</span>
                             </el-form-item>
@@ -121,7 +121,14 @@ const defaultForm = {
     filePath: '', // 文件所在路径
     unzipPath: '', // 解压文件所在路径
     contents: [], // 目录
-    url: '',
+    url: ''
+}
+
+const fields = {
+    title: '书名',
+    language: '语言',
+    author: '作者',
+    publisher: '出版社'
 }
 
 export default {
@@ -131,6 +138,14 @@ export default {
         isEdit: Boolean
     },
     data() {
+        const validateRequire = (rule, value, callback) => {
+            console.log(value)
+            if (value.length === 0) {
+                callback(new Error(fields[rule.field] + '不能为空哟～'))
+            } else {
+                callback()
+            }
+        }
         return {
             loading: false,
             postForm: {
@@ -150,7 +165,13 @@ export default {
             },
             fileList: [],
             labelWidth: '120px',
-            contentsTree: []
+            contentsTree: [],
+            postFormRules: {
+                title: [{ validator: validateRequire }],
+                author: [{ validator: validateRequire }],
+                language: [{ validator: validateRequire }],
+                publisher: [{ validator: validateRequire }],
+            }
         }
     },
     methods: {
@@ -160,10 +181,24 @@ export default {
         },
         // 提交表单信息
         submitForm() {
-            this.loading = true
-            setTimeout(() => {
-                this.loading = false
-            }, 1000)
+            if (!this.loading){
+                this.loading = true
+                this.$refs.postForm.validate((valid, field) => {
+                    console.log(valid, field)
+                    if (valid) {
+
+                    } else {
+                        this.$message({
+                            message: field[Object.keys(field)[0]][0].message,
+                            type: 'error'
+                        })
+                        this.loading = false
+                    }
+                })
+            }
+            // setTimeout(() => {
+            //     this.loading = false
+            // }, 1000)
         },
         // 更新表单数据
         setData(data) {
@@ -171,7 +206,7 @@ export default {
                 ...this.postForm,
                 title: data.title,
                 author: data.author,
-                publisher: data.publisher,
+                publisher: data.publisher || '',
                 language: data.language,
                 rootFile: data.rootFile,
                 cover: data.cover,
@@ -210,11 +245,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .detail-container {
-        padding: 40px 50px 20px;
-        .preview-img {
-            width: 200px;
-            height: 270px;
-        }
+.detail-container {
+    padding: 40px 50px 20px;
+
+    .preview-img {
+        width: 200px;
+        height: 270px;
     }
+}
 </style>
