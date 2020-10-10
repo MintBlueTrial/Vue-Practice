@@ -108,6 +108,22 @@ import Warning from '@/views/book/components/Warning'
 import EBookUpload from '@/components/EBookUpload'
 import MdInput from '@/components/MDinput/index'
 
+const defaultForm = {
+    title: '', // 书名
+    author: '', // 作者
+    publisher: '', // 出版社
+    language: '', // 语种
+    rootFile: '', // 根文件路径
+    cover: '', // 封面图片URL
+    coverPath: '', // 封面图片路径
+    fileName: '', // 文件名
+    originalName: '', // 文件原始名称
+    filePath: '', // 文件所在路径
+    unzipPath: '', // 解压文件所在路径
+    contents: [], // 目录
+    url: '',
+}
+
 export default {
     name: 'Detail',
     components: { MdInput, Warning, Sticky, EBookUpload },
@@ -170,6 +186,11 @@ export default {
             }
             this.contentsTree = data.contentsTree
         },
+        // 清空表单数据
+        setDefault() {
+            this.postForm = Object.assign({}, defaultForm)
+            this.contentsTree = []
+        },
         // 目录点击事件
         onContentClick(data) {
             if (data.text) {
@@ -182,7 +203,7 @@ export default {
         },
         // 上传移除事件
         onUploadRemove() {
-            console.log(456)
+            this.setDefault()
         }
     }
 }
