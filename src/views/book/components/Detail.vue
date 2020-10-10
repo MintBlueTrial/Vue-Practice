@@ -107,6 +107,7 @@ import Sticky from '@/components/Sticky/index'
 import Warning from '@/views/book/components/Warning'
 import EBookUpload from '@/components/EBookUpload'
 import MdInput from '@/components/MDinput/index'
+import { createBook } from '@/api/book'
 
 const defaultForm = {
     title: '', // 书名
@@ -148,21 +149,7 @@ export default {
         }
         return {
             loading: false,
-            postForm: {
-                status: '',
-                title: '', // 书名
-                author: '', // 作者
-                publisher: '', // 出版社
-                language: '', // 语种
-                rootFile: '', // 根文件路径
-                cover: '', // 封面图片URL
-                coverPath: '', // 封面图片路径
-                fileName: '', // 文件名
-                originalName: '', // 文件原始名称
-                filePath: '', // 文件所在路径
-                unzipPath: '', // 解压文件所在路径
-                contents: [] // 目录
-            },
+            postForm: {},
             fileList: [],
             labelWidth: '120px',
             contentsTree: [],
@@ -170,7 +157,7 @@ export default {
                 title: [{ validator: validateRequire }],
                 author: [{ validator: validateRequire }],
                 language: [{ validator: validateRequire }],
-                publisher: [{ validator: validateRequire }],
+                publisher: [{ validator: validateRequire }]
             }
         }
     },
@@ -181,12 +168,17 @@ export default {
         },
         // 提交表单信息
         submitForm() {
-            if (!this.loading){
+            if (!this.loading) {
                 this.loading = true
                 this.$refs.postForm.validate((valid, field) => {
                     console.log(valid, field)
                     if (valid) {
-
+                        const book = Object.assign({}, this.postForm)
+                        delete book.contents
+                        delete book.contentsTree
+                        if (!this.isEdit) {
+                            createBook(book)
+                        }
                     } else {
                         this.$message({
                             message: field[Object.keys(field)[0]][0].message,
