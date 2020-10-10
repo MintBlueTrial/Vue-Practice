@@ -72,7 +72,7 @@
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="文件名称：" :label-width="labelWidth">
-                                <el-input v-model="postForm.fileName" placeholder="文件名称" disabled />
+                                <el-input v-model="postForm.originalName" placeholder="文件名称" disabled />
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -148,9 +148,28 @@ export default {
                 this.loading = false
             }, 1000)
         },
+        // 更新表单数据
+        setData(data) {
+            this.postForm = {
+                ...this.postForm,
+                title: data.title,
+                author: data.author,
+                publisher: data.publisher,
+                language: data.language,
+                rootFile: data.rootFile,
+                cover: data.cover,
+                url: data.url,
+                originalName: data.originalName,
+                contents: data.contents,
+                fileName: data.fileName,
+                coverPath: data.coverPath,
+                filePath: data.filePath,
+                unzipPath: data.unzipPath
+            }
+        },
         // 上传成功事件
-        onUploadSuccess() {
-            console.log(123)
+        onUploadSuccess(data) {
+            this.setData(data)
         },
         // 上传移除事件
         onUploadRemove() {
