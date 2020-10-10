@@ -177,7 +177,19 @@ export default {
                         delete book.contents
                         delete book.contentsTree
                         if (!this.isEdit) {
-                            createBook(book)
+                            createBook(book).then(response => {
+                                const { msg } = response
+                                this.$notify({
+                                    title: '操作成功',
+                                    message: msg,
+                                    type: 'success',
+                                    duration: 2000
+                                })
+                                this.loading = false
+                                this.setDefault()
+                            }).catch(() => {
+                                this.loading = false
+                            })
                         }
                     } else {
                         this.$message({
@@ -217,6 +229,8 @@ export default {
         setDefault() {
             this.postForm = Object.assign({}, defaultForm)
             this.contentsTree = []
+            this.fileList = []
+            this.$refs.postForm.resetFields()
         },
         // 目录点击事件
         onContentClick(data) {
