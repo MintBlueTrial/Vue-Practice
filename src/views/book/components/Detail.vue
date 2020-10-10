@@ -90,7 +90,7 @@
                         <el-col :span="24">
                             <el-form-item label="目录：" :label-width="labelWidth">
                                 <div v-if="postForm.contents && postForm.contents.length > 0" class="contents-wrapper">
-                                    <el-tree />
+                                    <el-tree :data="contentsTree" @node-click="onContentClick" />
                                 </div>
                                 <span v-else>无</span>
                             </el-form-item>
@@ -133,7 +133,8 @@ export default {
                 contents: [] // 目录
             },
             fileList: [],
-            labelWidth: '120px'
+            labelWidth: '120px',
+            contentsTree: []
         }
     },
     methods: {
@@ -164,7 +165,15 @@ export default {
                 fileName: data.fileName,
                 coverPath: data.coverPath,
                 filePath: data.filePath,
-                unzipPath: data.unzipPath
+                unzipPath: data.unzipPath,
+                contentsTree: data.contentsTree
+            }
+            this.contentsTree = data.contentsTree
+        },
+        // 目录点击事件
+        onContentClick(data) {
+            if (data.text) {
+                window.open(data.text)
             }
         },
         // 上传成功事件
