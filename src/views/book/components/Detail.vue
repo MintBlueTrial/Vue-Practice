@@ -174,7 +174,6 @@ export default {
                     console.log(valid, field)
                     if (valid) {
                         const book = Object.assign({}, this.postForm)
-                        delete book.contents
                         delete book.contentsTree
                         if (!this.isEdit) {
                             createBook(book).then(response => {
