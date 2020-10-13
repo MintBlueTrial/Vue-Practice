@@ -107,7 +107,7 @@ import Sticky from '@/components/Sticky/index'
 import Warning from '@/views/book/components/Warning'
 import EBookUpload from '@/components/EBookUpload'
 import MdInput from '@/components/MDinput/index'
-import { createBook, getBook } from '@/api/book'
+import { createBook, getBook, updateBook } from '@/api/book'
 
 const defaultForm = {
     title: '', // 书名
@@ -197,6 +197,19 @@ export default {
                                 })
                                 this.loading = false
                                 this.setDefault()
+                            }).catch(() => {
+                                this.loading = false
+                            })
+                        } else {
+                            updateBook(book).then(response => {
+                                const { msg } = response
+                                this.$notify({
+                                    title: '操作成功',
+                                    message: msg,
+                                    type: 'success',
+                                    duration: 2000
+                                })
+                                this.loading = false
                             }).catch(() => {
                                 this.loading = false
                             })

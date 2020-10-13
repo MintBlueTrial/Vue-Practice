@@ -15,10 +15,18 @@ export function createBook(book) {
     })
 }
 
-export function getBook(fileName){
+export function getBook(fileName) {
     return request({
         url: '/book/get',
         method: 'get',
         params: {fileName}
+    })
+}
+
+export function updateBook(book) {
+    return request({
+        url: '/book/update',
+        method: 'post',
+        data: book
     })
 }
