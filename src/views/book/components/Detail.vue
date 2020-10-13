@@ -89,7 +89,7 @@
                     <el-row>
                         <el-col :span="24">
                             <el-form-item label="目录：" :label-width="labelWidth">
-                                <div v-if="postForm.contents && postForm.contents.length > 0" class="contents-wrapper">
+                                <div v-if="contentsTree && contentsTree.length > 0" class="contents-wrapper">
                                     <el-tree :data="contentsTree" @node-click="onContentClick"/>
                                 </div>
                                 <span v-else>无</span>
@@ -107,7 +107,7 @@ import Sticky from '@/components/Sticky/index'
 import Warning from '@/views/book/components/Warning'
 import EBookUpload from '@/components/EBookUpload'
 import MdInput from '@/components/MDinput/index'
-import { createBook } from '@/api/book'
+import { createBook, getBook } from '@/api/book'
 
 const defaultForm = {
     title: '', // 书名
@@ -161,7 +161,18 @@ export default {
             }
         }
     },
+    created() {
+        if (this.isEdit){
+            const fileName = this.$route.params.fileName
+            this.getBookData(fileName)
+        }
+    },
     methods: {
+        getBookData(fileName) {
+            getBook(fileName).then(response => {
+                this.setData(response.data)
+            })
+        },
         // 展示说明
         showGuide() {
             console.log('Guide')
@@ -223,6 +234,7 @@ export default {
                 contentsTree: data.contentsTree
             }
             this.contentsTree = data.contentsTree
+            this.fileList = [{name: data.originalName, url: data.url}]
         },
         // 清空表单数据
         setDefault() {
