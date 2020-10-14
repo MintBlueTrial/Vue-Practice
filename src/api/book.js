@@ -7,6 +7,7 @@
 
 import request from '../utils/request'
 
+// 创建图书Api
 export function createBook(book) {
     return request({
         url: '/book/create',
@@ -15,6 +16,7 @@ export function createBook(book) {
     })
 }
 
+// 获取图书Api
 export function getBook(fileName) {
     return request({
         url: '/book/get',
@@ -23,6 +25,7 @@ export function getBook(fileName) {
     })
 }
 
+// 更新图书Api
 export function updateBook(book) {
     return request({
         url: '/book/update',
