@@ -30,7 +30,7 @@
                 <el-option
                     v-for="item in categoryList"
                     :key="item.value"
-                    :label="item.label"
+                    :label="item.label + '(' + item.num + ')'"
                     :value="item.value"
                 />
             </el-select>
