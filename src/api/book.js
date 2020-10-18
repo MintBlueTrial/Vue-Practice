@@ -33,3 +33,10 @@ export function updateBook(book) {
         data: book
     })
 }
+
+export function getCategory() {
+    return request({
+        url: '/book/category',
+        method: 'get'
+    })
+}
