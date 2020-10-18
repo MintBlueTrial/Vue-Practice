@@ -34,6 +34,7 @@ export function updateBook(book) {
     })
 }
 
+// 获取图书分类Api
 export function getCategory() {
     return request({
         url: '/book/category',

@@ -82,17 +82,21 @@ export default {
         this.getCategoryList()
     },
     methods: {
+        // 获取分类列表
         getCategoryList() {
             getCategory().then(response => {
                 this.categoryList = response.data
             })
         },
+        // 处理筛选
         handleFilter() {
 
         },
+        // 处理创建，跳转至图书创建页面
         handleCreate() {
             this.$router.push('/book/create')
         },
+        // 控制是否展示封面
         changeShowCover(val) {
             this.showCover = val
         }
