@@ -41,3 +41,12 @@ export function getCategory() {
         method: 'get'
     })
 }
+
+// 获取图书列表
+export function listBook(params) {
+    return request({
+        url: '/book/list',
+        method: 'get',
+        params
+    })
+}

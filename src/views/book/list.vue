@@ -54,7 +54,29 @@
             >显示封面
             </el-checkbox>
         </div>
-        <el-table />
+        <el-table
+            :key="tableKey"
+            v-loading="listLoading"
+            :data="list"
+            border
+            fit
+            highlight-current-row
+            style="width: 100%"
+            @sort-change="sortChange"
+        >
+            <el-table-column
+                label="ID"
+                prop="id"
+                sortable="custom"
+                align="center"
+                width="80"
+            />
+            <el-table-column label="书名" width="150" align="center">
+                <template slot-scope="{ row: {title}}">
+                    <span>{{ title }}</span>
+                </template>
+            </el-table-column>
+        </el-table>
         <Pagination
             :total="0"
         />
@@ -64,7 +86,7 @@
 <script>
 import Pagination from '../../components/Pagination/index'
 import waves from '@/directive/waves/waves'
-import {getCategory} from '@/api/book'
+import {getCategory, listBook} from '@/api/book'
 
 export default {
     components: {Pagination},
@@ -75,13 +97,28 @@ export default {
                 title: ''
             },
             showCover: false,
-            categoryList: []
+            categoryList: [],
+            tableKey: 0,
+            listLoading: true,
+            list: []
         }
     },
     mounted() {
         this.getCategoryList()
+        this.getList()
     },
     methods: {
+        // 获取表格数据
+        getList() {
+            this.listLoading = true
+            listBook(this.listQuery).then(response => {
+                this.list = response
+            })
+        },
+        // 排序
+        sortChange(data) {
+            console.log(data)
+        },
         // 获取分类列表
         getCategoryList() {
             getCategory().then(response => {
@@ -90,7 +127,7 @@ export default {
         },
         // 处理筛选
         handleFilter() {
-
+            this.getList()
         },
         // 处理创建，跳转至图书创建页面
         handleCreate() {
