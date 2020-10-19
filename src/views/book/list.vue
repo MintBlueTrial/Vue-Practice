@@ -76,6 +76,32 @@
                     <span>{{ title }}</span>
                 </template>
             </el-table-column>
+            <el-table-column label="作者" width="150" align="center">
+                <template slot-scope="{ row: {author}}">
+                    <span>{{ author }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="出版社" prop="publisher" width="150" align="center"></el-table-column>
+            <el-table-column label="分类" prop="categoryText" width="100" align="center"></el-table-column>
+            <el-table-column label="语言" prop="language" align="center"></el-table-column>
+            <el-table-column label="文件名" prop="fileName" align="center" width="100"></el-table-column>
+            <el-table-column label="文件路径" prop="filePath" align="center" width="100"></el-table-column>
+            <el-table-column label="封面路径" prop="coverPath" align="center" width="100"></el-table-column>
+            <el-table-column label="解压路径" prop="unzipPath" align="center" width="100"></el-table-column>
+            <el-table-column label="上传人" prop="createUser" align="center" width="100"></el-table-column>
+            <el-table-column label="上传时间" prop="createDate" align="center" width="100"></el-table-column>
+            <el-table-column label="操作" align="center" width="120" fixed="right">
+                <template slot-scope="{ row }">
+                    <el-button type="text" icon="el-icon-edit" @click="handleUpdate(row)" />
+                </template>
+            </el-table-column>
+            <el-table-column v-if="showCover" label="封面" align="center">
+                <template slot-scope="scope">
+                    <a :href="scope.row.cover" target="_black">
+                        <img :src="scope.row.cover" style="width: 120px;height: 180px" />
+                    </a>
+                </template>
+            </el-table-column>
         </el-table>
         <Pagination
             :total="0"
@@ -94,7 +120,8 @@ export default {
     data() {
         return {
             listQuery: {
-                title: ''
+                page: 1,
+                pageSize: 20
             },
             showCover: false,
             categoryList: [],
@@ -112,7 +139,9 @@ export default {
         getList() {
             this.listLoading = true
             listBook(this.listQuery).then(response => {
-                this.list = response
+                const { list } = response.data
+                this.list = list
+                this.listLoading = false
             })
         },
         // 排序
@@ -132,6 +161,10 @@ export default {
         // 处理创建，跳转至图书创建页面
         handleCreate() {
             this.$router.push('/book/create')
+        },
+        // 编辑图书信息
+        handleUpdate(row) {
+            this.$router.push(`/book/edit/${row.fileName}`)
         },
         // 控制是否展示封面
         changeShowCover(val) {
