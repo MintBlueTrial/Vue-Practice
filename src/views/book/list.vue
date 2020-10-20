@@ -72,13 +72,13 @@
                 width="80"
             />
             <el-table-column label="书名" width="150" align="center">
-                <template slot-scope="{ row: {title}}">
-                    <span>{{ title }}</span>
+                <template slot-scope="{ row: {titleWrapper}}">
+                    <span v-html="titleWrapper" />
                 </template>
             </el-table-column>
             <el-table-column label="作者" width="150" align="center">
-                <template slot-scope="{ row: {author}}">
-                    <span>{{ author }}</span>
+                <template slot-scope="{ row: {authorWrapper}}">
+                    <span v-html="authorWrapper" />
                 </template>
             </el-table-column>
             <el-table-column label="出版社" prop="publisher" width="150" align="center"></el-table-column>
@@ -143,6 +143,17 @@ export default {
             }
             this.listQuery = {...listQuery, ...this.listQuery}
         },
+        // 包装关键字，处理搜出的关键字高亮
+        wrapperKeyword(k, v) {
+            function highLight(value) {
+                return `<span style="color: #13ce66">${value}</span>`
+            }
+            if (!this.listQuery[k]) {
+                return v
+            } else {
+                return v.replace(RegExp(this.listQuery[k], 'ig'), v => highLight(v))
+            }
+        },
         // 获取表格数据
         getList() {
             this.listLoading = true
@@ -150,6 +161,10 @@ export default {
                 const { list } = response.data
                 this.list = list
                 this.listLoading = false
+                this.list.forEach(book => {
+                    book.titleWrapper = this.wrapperKeyword('title', book.title)
+                    book.authorWrapper = this.wrapperKeyword('author', book.author)
+                })
             })
         },
         // 排序
