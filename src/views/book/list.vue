@@ -139,7 +139,8 @@ export default {
         parseQuery() {
             let listQuery = {
                 page: 1,
-                pageSize: 20
+                pageSize: 20,
+                sort: '+id'
             }
             this.listQuery = {...listQuery, ...this.listQuery}
         },
@@ -170,6 +171,16 @@ export default {
         // 排序
         sortChange(data) {
             console.log(data)
+            const {prop, order} = data
+            this.sortBy(prop, order)
+        },
+        sortBy(prop, order) {
+            if (order === 'ascending') {
+                this.listQuery.sort = `+${prop}`
+            } else {
+                this.listQuery.sort = `-${prop}`
+            }
+            this.handleFilter()
         },
         // 获取分类列表
         getCategoryList() {
