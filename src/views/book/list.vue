@@ -104,7 +104,11 @@
             </el-table-column>
         </el-table>
         <Pagination
-            :total="0"
+            :total="total"
+            v-show="total > 0"
+            :page.sync="listQuery.page"
+            :limit.sync="listQuery.pageSize"
+            @pagination="getList"
         />
     </div>
 </template>
@@ -124,7 +128,8 @@ export default {
             categoryList: [],
             tableKey: 0,
             listLoading: true,
-            list: []
+            list: [],
+            total: 0
         }
     },
     created() {
@@ -159,7 +164,8 @@ export default {
         getList() {
             this.listLoading = true
             listBook(this.listQuery).then(response => {
-                const { list } = response.data
+                const { list, count } = response.data
+                this.total = count
                 this.list = list
                 this.listLoading = false
                 this.list.forEach(book => {
