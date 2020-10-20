@@ -119,10 +119,7 @@ export default {
     directives: {waves},
     data() {
         return {
-            listQuery: {
-                page: 1,
-                pageSize: 20
-            },
+            listQuery: {},
             showCover: false,
             categoryList: [],
             tableKey: 0,
@@ -130,11 +127,22 @@ export default {
             list: []
         }
     },
+    created() {
+        this.parseQuery()
+    },
     mounted() {
         this.getCategoryList()
         this.getList()
     },
     methods: {
+        // 解析查询条件
+        parseQuery() {
+            let listQuery = {
+                page: 1,
+                pageSize: 20
+            }
+            this.listQuery = {...listQuery, ...this.listQuery}
+        },
         // 获取表格数据
         getList() {
             this.listLoading = true
