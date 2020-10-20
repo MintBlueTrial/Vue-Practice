@@ -81,15 +81,6 @@
                     <span v-html="authorWrapper" />
                 </template>
             </el-table-column>
-            <el-table-column label="出版社" prop="publisher" width="150" align="center"></el-table-column>
-            <el-table-column label="分类" prop="categoryText" width="100" align="center"></el-table-column>
-            <el-table-column label="语言" prop="language" align="center"></el-table-column>
-            <el-table-column label="文件名" prop="fileName" align="center" width="100"></el-table-column>
-            <el-table-column label="文件路径" prop="filePath" align="center" width="100"></el-table-column>
-            <el-table-column label="封面路径" prop="coverPath" align="center" width="100"></el-table-column>
-            <el-table-column label="解压路径" prop="unzipPath" align="center" width="100"></el-table-column>
-            <el-table-column label="上传人" prop="createUser" align="center" width="100"></el-table-column>
-            <el-table-column label="上传时间" prop="createDate" align="center" width="100"></el-table-column>
             <el-table-column label="操作" align="center" width="120" fixed="right">
                 <template slot-scope="{ row }">
                     <el-button type="text" icon="el-icon-edit" @click="handleUpdate(row)" />
@@ -102,6 +93,15 @@
                     </a>
                 </template>
             </el-table-column>
+            <el-table-column label="出版社" prop="publisher" width="150" align="center"></el-table-column>
+            <el-table-column label="分类" prop="categoryText" width="100" align="center"></el-table-column>
+            <el-table-column label="语言" prop="language" align="center"></el-table-column>
+            <el-table-column label="文件名" prop="fileName" align="center" width="100"></el-table-column>
+            <el-table-column label="文件路径" prop="filePath" align="center" width="100"></el-table-column>
+            <el-table-column label="封面路径" prop="coverPath" align="center" width="100"></el-table-column>
+            <el-table-column label="解压路径" prop="unzipPath" align="center" width="100"></el-table-column>
+            <el-table-column label="上传人" prop="createUser" align="center" width="100"></el-table-column>
+            <el-table-column label="上传时间" prop="createDate" align="center" width="100"></el-table-column>
         </el-table>
         <Pagination
             :total="total"
