@@ -89,7 +89,7 @@
             <el-table-column v-if="showCover" label="封面" align="center">
                 <template slot-scope="scope">
                     <a :href="scope.row.cover" target="_black">
-                        <img :src="scope.row.cover" style="width: 120px;height: 180px" />
+                        <img :src="scope.row.cover" style="width: 120px;height: 180px"  alt=""/>
                     </a>
                 </template>
             </el-table-column>
@@ -97,11 +97,19 @@
             <el-table-column label="分类" prop="categoryText" width="100" align="center"></el-table-column>
             <el-table-column label="语言" prop="language" align="center"></el-table-column>
             <el-table-column label="文件名" prop="fileName" align="center" width="100"></el-table-column>
-            <el-table-column label="文件路径" prop="filePath" align="center" width="100"></el-table-column>
+            <el-table-column label="文件路径" prop="filePath" align="center" width="100">
+                <template slot-scope="{ row: {filePath} }">
+                    <span>{{ filePath | valueFilter }}</span>
+                </template>
+            </el-table-column>
             <el-table-column label="封面路径" prop="coverPath" align="center" width="100"></el-table-column>
             <el-table-column label="解压路径" prop="unzipPath" align="center" width="100"></el-table-column>
             <el-table-column label="上传人" prop="createUser" align="center" width="100"></el-table-column>
-            <el-table-column label="上传时间" prop="createDate" align="center" width="100"></el-table-column>
+            <el-table-column label="上传时间" prop="createDt" align="center" width="100">
+                <template slot-scope="{ row: {createDt} }">
+                    <span>{{ createDt | timeFilter }}</span>
+                </template>
+            </el-table-column>
         </el-table>
         <Pagination
             :total="total"
@@ -117,10 +125,20 @@
 import Pagination from '../../components/Pagination/index'
 import waves from '@/directive/waves/waves'
 import {getCategory, listBook} from '@/api/book'
+import { parseTime } from '@/utils'
 
 export default {
     components: {Pagination},
     directives: {waves},
+    // 过滤器
+    filters: {
+        valueFilter(value) {
+            return value ? value : '无'
+        },
+        timeFilter(time) {
+            return time ? parseTime(time, '{y}-{m}-{d} {h}:{i}') : '无'
+        }
+    },
     data() {
         return {
             listQuery: {},
