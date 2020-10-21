@@ -81,11 +81,6 @@
                     <span v-html="authorWrapper" />
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="120" fixed="right">
-                <template slot-scope="{ row }">
-                    <el-button type="text" icon="el-icon-edit" @click="handleUpdate(row)" />
-                </template>
-            </el-table-column>
             <el-table-column v-if="showCover" label="封面" align="center">
                 <template slot-scope="scope">
                     <a :href="scope.row.cover" target="_black">
@@ -110,6 +105,12 @@
                     <span>{{ createDt | timeFilter }}</span>
                 </template>
             </el-table-column>
+            <el-table-column label="操作" align="center" width="120" fixed="right">
+                <template slot-scope="{ row }">
+                    <el-button type="text" icon="el-icon-edit" @click="handleUpdate(row)" />
+                    <el-button type="text" style="color: red" icon="el-icon-delete" @click="handleDelete(row)" />
+                </template>
+            </el-table-column>
         </el-table>
         <Pagination
             :total="total"
@@ -124,7 +125,7 @@
 <script>
 import Pagination from '../../components/Pagination/index'
 import waves from '@/directive/waves/waves'
-import {getCategory, listBook} from '@/api/book'
+import {getCategory, listBook, deleteBook} from '@/api/book'
 import { parseTime } from '@/utils'
 
 export default {
@@ -227,6 +228,25 @@ export default {
         // 控制是否展示封面
         changeShowCover(val) {
             this.showCover = val
+        },
+        // 删除图书信息
+        handleDelete(row) {
+            console.log(row)
+            this.$confirm('此操作将永久删除电子书信息，是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type:'warning'
+            }).then(() => {
+                deleteBook(row.fileName).then(response => {
+                    this.$notify({
+                        title: '成功',
+                        message: response.msg || '删除成功',
+                        type: 'success',
+                        duration: 2000
+                    })
+                    this.handleFilter()
+                })
+            })
         }
     }
 }
