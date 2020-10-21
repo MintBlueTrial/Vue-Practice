@@ -31,7 +31,7 @@
                     v-for="item in categoryList"
                     :key="item.value"
                     :label="item.label + '(' + item.num + ')'"
-                    :value="item.value"
+                    :value="item.label"
                 />
             </el-select>
             <el-button
@@ -117,7 +117,7 @@
             v-show="total > 0"
             :page.sync="listQuery.page"
             :limit.sync="listQuery.pageSize"
-            @pagination="getList"
+            @pagination="refresh"
         />
     </div>
 </template>
@@ -154,6 +154,17 @@ export default {
     created() {
         this.parseQuery()
     },
+    beforeRouteUpdate(to, from, next) {
+        console.log(to, from)
+        if (to.path === from.path) {
+            const newQuery = Object.assign({}, to.query)
+            const oldQuery = Object.assign({}, from.query)
+            if (JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
+                this.getList()
+            }
+        }
+        next()
+    },
     mounted() {
         this.getCategoryList()
         this.getList()
@@ -161,12 +172,18 @@ export default {
     methods: {
         // 解析查询条件
         parseQuery() {
+            const query = Object.assign({}, this.$route.query)
+            console.log(query)
             let listQuery = {
                 page: 1,
                 pageSize: 20,
                 sort: '+id'
             }
-            this.listQuery = {...listQuery, ...this.listQuery}
+            if (query) {
+                query.page && (query.page = +query.page)
+                query.pageSize && (query.pageSize = +query.pageSize)
+            }
+            this.listQuery = {...listQuery, ...query}
         },
         // 包装关键字，处理搜出的关键字高亮
         wrapperKeyword(k, v) {
@@ -213,9 +230,17 @@ export default {
                 this.categoryList = response.data
             })
         },
+        // 刷新页面
+        refresh() {
+            this.$router.push({
+                path: '/book/list',
+                query: this.listQuery
+            })
+        },
         // 处理筛选
         handleFilter() {
-            this.getList()
+            this.listQuery.page = 1
+            this.refresh()
         },
         // 处理创建，跳转至图书创建页面
         handleCreate() {
